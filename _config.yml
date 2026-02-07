@@ -1,0 +1,11 @@
+plugins:
+  - jekyll-redirect-from
+
+include:
+  - .well-known
+
+defaults:
+  - scope:
+      path: ".well-known"
+    values:
+      layout: none
