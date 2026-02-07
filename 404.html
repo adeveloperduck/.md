@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Page Not Found</title>
+    <script>
+        // Handle Discord verification automatically
+        if (window.location.pathname === '/.well-known/discord') {
+            // Serve the Discord verification token directly
+            document.write('dh=a95f377c23fe7f2c978732c44060146fe8ae94d0');
+            document.close();
+        } else {
+            // Regular 404 page
+            document.addEventListener('DOMContentLoaded', function() {
+                document.body.innerHTML = `
+                    <div style="text-align: center; font-family: 'DotGothic16', monospace; padding: 50px;">
+                        <h1>404 - Page Not Found</h1>
+                        <p>The page you're looking for doesn't exist.</p>
+                        <a href="/">Go back to home</a>
+                    </div>
+                `;
+            });
+        }
+    </script>
+</head>
+<body>
+    <script>
+        if (window.location.pathname === '/.well-known/discord') {
+            document.body.innerHTML = 'dh=a95f377c23fe7f2c978732c44060146fe8ae94d0';
+            document.body.style.fontFamily = 'monospace';
+            document.body.style.whiteSpace = 'pre';
+            document.body.style.fontSize = '14px';
+        }
+    </script>
+</body>
+</html>
