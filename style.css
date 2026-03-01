@@ -55,6 +55,30 @@ body {
     opacity: 0.7;
 }
 
+.ideas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.ideas h2 {
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+.ideas a {
+    color: #000;
+    text-decoration: none;
+    font-size: 18px;
+    transition: opacity 0.3s ease;
+}
+
+.ideas a:hover {
+    opacity: 0.7;
+}
+
 .email {
     font-size: 14px;
 }
