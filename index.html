@@ -545,19 +545,24 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') setSlide(cur + 1);
 });
 
-// trackpad / wheel
+// trackpad / wheel (improved for 2-finger swipe on macOS)
 let wheelBuf = 0, wheelTm;
 site.addEventListener('wheel', e => {
   e.preventDefault();
-  wheelBuf += e.deltaX + e.deltaY * 0.4;
+  
+  // More sensitive for trackpad gestures (2-finger swipe)
+  const sensitivity = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? 1.2 : 0.6;
+  wheelBuf += (e.deltaX + e.deltaY * 0.3) * sensitivity;
+  
   clearTimeout(wheelTm);
   wheelTm = setTimeout(() => {
-    if (wheelBuf > 55) setSlide(cur + 1);
+    // Lower threshold for easier swiping
+    if (wheelBuf > 35) setSlide(cur + 1);
     wheelBuf = 0;
-  }, 70);
+  }, 60);
 }, { passive: false });
 
-// mouse drag
+// mouse drag (improved sensitivity)
 let mdX = 0, mdDrag = false;
 site.addEventListener('mousedown', e => { mdX = e.clientX; mdDrag = true; slidesEl.style.transition = 'none'; });
 window.addEventListener('mousemove', e => {
@@ -570,26 +575,36 @@ window.addEventListener('mouseup', e => {
   mdDrag = false;
   slidesEl.style.transition = 'transform 0.75s cubic-bezier(0.77,0,0.18,1)';
   const d = e.clientX - mdX;
-  if (d < -(window.innerWidth * 0.12)) setSlide(cur + 1);
+  // More sensitive threshold for mouse dragging
+  if (d < -(window.innerWidth * 0.08)) setSlide(cur + 1);
   else slidesEl.style.transform = `translateX(-${cur * 100}%)`;
 });
 
 // touch
 let tX = 0, tDrag = false, tOff = 0;
 site.addEventListener('touchstart', e => {
-  tX = e.touches[0].clientX; tDrag = true; tOff = 0;
+  // Handle both single and multi-touch
+  const touch = e.touches[0];
+  tX = touch.clientX; tDrag = true; tOff = 0;
   slidesEl.style.transition = 'none';
 }, { passive: true });
 site.addEventListener('touchmove', e => {
   if (!tDrag) return;
-  tOff = e.touches[0].clientX - tX;
+  const touch = e.touches[0];
+  tOff = touch.clientX - tX;
   if (tOff < 0) slidesEl.style.transform = `translateX(calc(-${cur * 100}% + ${tOff}px))`;
 }, { passive: true });
-site.addEventListener('touchend', () => {
+site.addEventListener('touchend', e => {
   if (!tDrag) return;
   tDrag = false;
   slidesEl.style.transition = 'transform 0.75s cubic-bezier(0.77,0,0.18,1)';
-  if (tOff < -(window.innerWidth * 0.18)) setSlide(cur + 1);
+  
+  // More sensitive threshold for easier swiping, especially with 2+ fingers
+  const threshold = e.changedTouches.length >= 2 ? 
+    -(window.innerWidth * 0.08) : // 2+ fingers: very sensitive (8% of screen)
+    -(window.innerWidth * 0.12);  // 1 finger: moderately sensitive (12% of screen)
+    
+  if (tOff < threshold) setSlide(cur + 1);
   else slidesEl.style.transform = `translateX(-${cur * 100}%)`;
   tOff = 0;
 });
