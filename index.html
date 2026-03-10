@@ -496,6 +496,38 @@ const loaderBar = document.getElementById('loader-bar');
 const loader    = document.getElementById('loader');
 const site      = document.getElementById('site');
 
+// ── BACKGROUND MUSIC ─────────────────────────────────────────────────────────
+const bgMusic = document.getElementById('bg-music');
+const muteBtn = document.getElementById('mute-btn');
+let isMuted = false;
+
+// Initialize background music
+function initMusic() {
+  bgMusic.volume = 0.15; // Low volume for ambient music
+  bgMusic.play().catch(() => {
+    // Auto-play blocked, will start on user interaction
+    document.addEventListener('click', () => {
+      if (!isMuted) bgMusic.play();
+    }, { once: true });
+  });
+}
+
+// Mute button functionality
+muteBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  isMuted = !isMuted;
+  
+  if (isMuted) {
+    bgMusic.pause();
+    muteBtn.style.opacity = '0.5';
+  } else {
+    bgMusic.play();
+    muteBtn.style.opacity = '1';
+  }
+  
+  muteBtn.title = isMuted ? 'Unmute music' : 'Mute music';
+});
+
 let displayed = 0;
 const duration = 2400;
 const start = performance.now();
@@ -531,6 +563,8 @@ function reveal() {
     site.style.transform = 'translateY(0)';
     site.classList.remove('enter');
     activateSlide(0);
+    // Start background music after loading is complete
+    setTimeout(initMusic, 500);
   }, { once: true });
 }
 
