@@ -1,33 +1,537 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>swift.student(developer)</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nav.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --black: #0a0a0a;
+  --white: #ffffff;
+  --gray: #888888;
+  --light-gray: #cccccc;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--black);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── LOADER ── */
+#loader {
+  position: fixed; inset: 0;
+  background: var(--black);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+#loader.slide-up {
+  animation: loaderUp 1s cubic-bezier(0.76,0,0.24,1) forwards;
+}
+@keyframes loaderUp {
+  to { transform: translateY(-100%); }
+}
+
+#counter {
+  font-size: clamp(80px, 16vw, 170px);
+  font-weight: 300;
+  color: var(--white);
+  letter-spacing: -0.05em;
+  line-height: 1;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+#loader-bar {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 1.5px;
+  background: rgba(255,255,255,0.4);
+  width: 0%;
+}
+#loader-label {
+  position: absolute;
+  bottom: 22px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  user-select: none;
+}
+
+/* ── SITE ── */
+#site {
+  position: fixed; inset: 0;
+  background: var(--white);
+  transform: translateY(100%);
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+#site.enter {
+  animation: siteUp 1s cubic-bezier(0.76,0,0.24,1) forwards;
+  animation-delay: 0.05s;
+}
+@keyframes siteUp {
+  to { transform: translateY(0); }
+}
+
+/* ── NAV ── */
+nav {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  padding: 28px 0 0;
+  gap: 44px;
+}
+nav a {
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: none;
+  color: var(--gray);
+  letter-spacing: 0.005em;
+  transition: color 0.2s ease;
+  padding: 4px 2px;
+}
+nav a.active { color: var(--black); font-weight: 400; }
+nav a:hover { color: var(--black); }
+#slide-contact ~ * nav a { color: rgba(255,255,255,0.4); }
+
+/* nav color adaptation */
+nav.on-dark a { color: rgba(255,255,255,0.35); }
+nav.on-dark a.active { color: var(--white); }
+nav.on-dark a:hover { color: var(--white); }
+
+/* ── SLIDES ── */
+#slides {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.75s cubic-bezier(0.77,0,0.18,1);
+  will-change: transform;
+}
+
+.slide {
+  min-width: 100%; width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 80px 40px 72px;
+  flex-shrink: 0;
+}
+
+/* ─ HELLO ─ */
+#slide-hello .content {
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease 0.25s, transform 0.9s cubic-bezier(0.34,1,0.64,1) 0.25s;
+}
+#slide-hello.active .content { opacity: 1; transform: translateY(0); }
+#slide-hello[data-visited] .content {
+  opacity: 1; transform: translateY(0);
+  transition: none;
+}
+
+.hello-main {
+  font-size: clamp(16px, 2.1vw, 19px);
+  font-weight: 400;
+  color: var(--black);
+  line-height: 1.75;
+  margin-bottom: 28px;
+}
+.hello-main .dim { color: var(--gray); }
+.hello-main .bold { font-weight: 400; color: var(--black); }
+.hello-sub {
+  font-size: clamp(15px, 1.7vw, 17px);
+  font-weight: 400;
+  color: var(--black);
+  line-height: 1.9;
+}
+.hello-hint {
+  font-size: clamp(15px, 1.7vw, 17px);
+  font-weight: 400;
+  color: var(--gray);
+  line-height: 1.9;
+}
+
+/* ─ SHARED INNER ─ */
+.slide-inner {
+  width: 100%; max-width: 680px;
+  margin: 0 auto;
+  padding-top: 36px;
+  opacity: 0;
+  transform: translateX(28px);
+  transition: opacity 0.7s ease 0.15s, transform 0.75s cubic-bezier(0.34,1,0.64,1) 0.15s;
+}
+.slide.active .slide-inner { opacity: 1; transform: translateX(0); }
+
+.slide-title {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--light-gray);
+  margin-bottom: 32px;
+}
+
+/* ─ PROJECTS ─ */
+.project-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 17px 0;
+  border-bottom: 1px solid #ebebeb;
+  transition: padding-left 0.35s cubic-bezier(0.34,1.2,0.64,1);
+}
+.project-item:first-of-type { border-top: 1px solid #ebebeb; }
+.project-item:hover { padding-left: 10px; }
+.project-name { font-size: 16px; font-weight: 400; color: var(--black); letter-spacing: -0.01em; }
+.project-tag { font-size: 13px; font-weight: 400; color: var(--gray); }
+
+.idea-item {
+  padding: 17px 0;
+  border-bottom: 1px solid #ebebeb;
+}
+.idea-item:first-of-type { border-top: 1px solid #ebebeb; }
+.idea-link {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--black);
+  text-decoration: none;
+  margin-bottom: 4px;
+  position: relative;
+}
+.idea-link::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 1px;
+  background: var(--black);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.34,1,0.64,1);
+}
+.idea-link:hover::after { transform: scaleX(1); }
+.idea-date { font-size: 11px; color: var(--light-gray); font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 5px; }
+.idea-text { font-size: 14px; font-weight: 400; color: var(--gray); line-height: 1.55; }
+
+/* ─ PROJECTS EMPTY ─ */
+.projects-empty {
+  font-size: clamp(16px, 2.1vw, 19px);
+  font-weight: 400;
+  color: var(--black);
+  line-height: 1.75;
+}
+.projects-empty .dim { color: var(--gray); }
+.projects-ideas-link {
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.projects-ideas-link:hover { color: var(--gray); }
+#slide-contact { background: var(--white); }
+#slide-contact .slide-inner {
+  text-align: center;
+  transform: translateX(28px);
+}
+#slide-contact.active .slide-inner { transform: translateX(0); }
+.contact-intro {
+  font-size: clamp(16px, 2.1vw, 19px);
+  font-weight: 400;
+  color: var(--black);
+  line-height: 1.75;
+  margin-bottom: 28px;
+}
+.contact-intro .dim { color: var(--gray); }
+.contact-links {
+  display: flex;
+  gap: 36px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.contact-link {
+  font-size: clamp(15px, 1.7vw, 17px);
+  font-weight: 400;
+  color: var(--gray);
+  text-decoration: none;
+  letter-spacing: 0.005em;
+  transition: color 0.2s ease;
+  position: relative;
+}
+.contact-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 1px;
+  background: var(--black);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.34,1,0.64,1);
+}
+.contact-link:hover { color: var(--black); }
+.contact-link:hover::after { transform: scaleX(1); }
+
+/* ─ OTHER ─ */
+#slide-other {
+  background: var(--black);
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+}
+#other-arena {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bounce-word {
+  position: absolute;
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  color: rgba(255,255,255,0.85);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+  top: 0; left: 0;
+}
+
+/* ── end ── */
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="content">
-            <h1 class="title">swift.student(developer)</h1>
-            
-            <div class="links">
-                <a href="https://github.com/adeveloperduck" target="_blank">github</a>
-                <a href="https://discord.com/users/1337320225066061911" target="_blank">discord</a>
-            </div>
-            
-            <div class="ideas">
-                <h2>ideas</h2>
-                <a href="https://adeveloperduck.github.io/idea-1/" target="_blank">idea-1</a>
-                <a href="https://adeveloperduck.github.io/idea-2/" target="_blank">idea-2</a>
-                <a href="https://adeveloperduck.github.io/idea-3/" target="_blank">idea-3</a>
-            </div>
-            
-            <footer class="email">
-                <a href="mailto:navneet.dagdiya@gmail.com">navneet.dagdiya@gmail.com</a>
-            </footer>
-        </div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div id="counter">0</div>
+  <div id="loader-bar"></div>
+  <div id="loader-label">loading</div>
+</div>
+
+<!-- SITE -->
+<div id="site">
+
+  <nav id="main-nav">
+    <a href="#" class="nav-link active" data-slide="0">hello</a>
+    <a href="#" class="nav-link" data-slide="1">projects</a>
+    <a href="#" class="nav-link" data-slide="2">ideas</a>
+    <a href="#" class="nav-link" data-slide="3">contact</a>
+  </nav>
+
+  <div id="slides">
+
+    <div class="slide" id="slide-hello">
+      <div class="content">
+        <p class="hello-main">
+          <span class="dim">hello, I'm </span><span class="bold">nav</span><span class="dim">, a </span><span class="bold">student developer</span><span class="dim"> who lives in </span><span class="bold">Perth, Western australia</span><br>
+          <span class="dim">I enjoy </span><span class="bold">programming</span><span class="dim"> in </span><span class="bold">swift</span><span class="dim">, with </span><span class="bold">swiftui</span><span class="dim">, as well as </span><span class="bold">photography</span><span class="dim">.</span>
+        </p>
+        <p class="hello-sub">welcome to my corner of the internet</p>
+        <p class="hello-hint">try swiping right.</p>
+      </div>
     </div>
+
+    <div class="slide" id="slide-projects">
+      <div class="slide-inner" style="text-align:center;">
+        <p class="projects-empty">
+          <span class="dim">currently, I have no fully fledged projects.</span><br>
+          <span class="dim">check out </span><span class="projects-ideas-link" onclick="setSlide(2)">ideas</span><span class="dim"> instead.</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-ideas">
+      <div class="slide-inner">
+        <div class="idea-item">
+          <a href="https://adeveloperduck.github.io/idea-1/" class="idea-link" target="_blank">idea 1</a>
+          <div class="idea-text">a simple click counter for macos</div>
+        </div>
+        <div class="idea-item">
+          <a href="https://adeveloperduck.github.io/idea-2/" class="idea-link" target="_blank">idea 2</a>
+          <div class="idea-text">a very unpolished notes + tasks app</div>
+        </div>
+        <div class="idea-item">
+          <a href="https://adeveloperduck.github.io/idea-3/" class="idea-link" target="_blank">idea 3</a>
+          <div class="idea-text">a simple quote generator</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide" id="slide-contact">
+      <div class="slide-inner">
+        <div class="slide-title">contact</div>
+        <p class="contact-intro">
+          <span class="dim">I'm </span>nav<span class="dim">, a </span>student developer<span class="dim"> in </span>Perth, Western australia<span class="dim">.</span><br>
+          <span class="dim">reach me at any of these places.</span>
+        </p>
+        <div class="contact-links">
+          <a href="https://github.com/adeveloperduck" class="contact-link" target="_blank">github</a>
+          <a href="https://discord.com/users/1337320225066061911" class="contact-link" target="_blank">discord</a>
+          <a href="mailto:navneet.dagdiya@gmail.com" class="contact-link">email</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// ── LOADER ──────────────────────────────────────────────────────────────────
+const counterEl = document.getElementById('counter');
+const loaderBar = document.getElementById('loader-bar');
+const loader    = document.getElementById('loader');
+const site      = document.getElementById('site');
+
+let displayed = 0;
+const duration = 2400;
+const start = performance.now();
+
+function easeInOut(t) {
+  return t < 0.5 ? 2*t*t : -1 + (4-2*t)*t;
+}
+
+(function tick(now) {
+  const t = Math.min((now - start) / duration, 1);
+  const val = Math.round(easeInOut(t) * 100);
+  if (val !== displayed) {
+    displayed = val;
+    counterEl.textContent = displayed;
+    loaderBar.style.width = displayed + '%';
+  }
+  if (t < 1) requestAnimationFrame(tick);
+  else {
+    counterEl.textContent = '100';
+    loaderBar.style.width = '100%';
+    setTimeout(reveal, 320);
+  }
+})(start);
+
+function reveal() {
+  site.classList.add('enter');
+  loader.classList.add('slide-up');
+  loader.addEventListener('animationend', () => {
+    loader.style.display = 'none';
+    loader.style.pointerEvents = 'none';
+  }, { once: true });
+  site.addEventListener('animationend', () => {
+    site.style.transform = 'translateY(0)';
+    site.classList.remove('enter');
+    activateSlide(0);
+  }, { once: true });
+}
+
+// ── SLIDES ──────────────────────────────────────────────────────────────────
+const slidesEl  = document.getElementById('slides');
+const slideEls  = document.querySelectorAll('.slide');
+const navLinks  = document.querySelectorAll('.nav-link');
+const mainNav   = document.getElementById('main-nav');
+const N = slideEls.length;
+let cur = 0, busy = false;
+
+function setSlide(n) {
+  if (n < 0 || n >= N || n === cur || busy) return;
+  busy = true;
+
+  slideEls[cur].classList.remove('active');
+  navLinks[cur].classList.remove('active');
+
+  cur = n;
+  slidesEl.style.transform = `translateX(-${cur * 100}%)`;
+
+  navLinks[cur].classList.add('active');
+
+  // dark nav for contact slide (index 3 is now the last)
+  const dark = false;
+  mainNav.classList.toggle('on-dark', dark);
+
+  setTimeout(() => { activateSlide(cur); busy = false; }, 120);
+}
+
+function activateSlide(n) {
+  slideEls[n].classList.add('active');
+  navLinks[n].classList.add('active');
+  slideEls[n].dataset.visited = 'true';
+}
+
+// nav
+navLinks.forEach(a => {
+  a.addEventListener('click', e => { e.preventDefault(); setSlide(+a.dataset.slide); });
+});
+
+// keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') setSlide(cur + 1);
+});
+
+// trackpad / wheel
+let wheelBuf = 0, wheelTm;
+site.addEventListener('wheel', e => {
+  e.preventDefault();
+  wheelBuf += e.deltaX + e.deltaY * 0.4;
+  clearTimeout(wheelTm);
+  wheelTm = setTimeout(() => {
+    if (wheelBuf > 55) setSlide(cur + 1);
+    wheelBuf = 0;
+  }, 70);
+}, { passive: false });
+
+// mouse drag
+let mdX = 0, mdDrag = false;
+site.addEventListener('mousedown', e => { mdX = e.clientX; mdDrag = true; slidesEl.style.transition = 'none'; });
+window.addEventListener('mousemove', e => {
+  if (!mdDrag) return;
+  const d = e.clientX - mdX;
+  if (d < 0) slidesEl.style.transform = `translateX(calc(-${cur * 100}% + ${d}px))`;
+});
+window.addEventListener('mouseup', e => {
+  if (!mdDrag) return;
+  mdDrag = false;
+  slidesEl.style.transition = 'transform 0.75s cubic-bezier(0.77,0,0.18,1)';
+  const d = e.clientX - mdX;
+  if (d < -(window.innerWidth * 0.12)) setSlide(cur + 1);
+  else slidesEl.style.transform = `translateX(-${cur * 100}%)`;
+});
+
+// touch
+let tX = 0, tDrag = false, tOff = 0;
+site.addEventListener('touchstart', e => {
+  tX = e.touches[0].clientX; tDrag = true; tOff = 0;
+  slidesEl.style.transition = 'none';
+}, { passive: true });
+site.addEventListener('touchmove', e => {
+  if (!tDrag) return;
+  tOff = e.touches[0].clientX - tX;
+  if (tOff < 0) slidesEl.style.transform = `translateX(calc(-${cur * 100}% + ${tOff}px))`;
+}, { passive: true });
+site.addEventListener('touchend', () => {
+  if (!tDrag) return;
+  tDrag = false;
+  slidesEl.style.transition = 'transform 0.75s cubic-bezier(0.77,0,0.18,1)';
+  if (tOff < -(window.innerWidth * 0.18)) setSlide(cur + 1);
+  else slidesEl.style.transform = `translateX(-${cur * 100}%)`;
+  tOff = 0;
+});
+
+
+</script>
 </body>
 </html>
