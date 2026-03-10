@@ -517,7 +517,7 @@ function setSlide(n) {
   const dark = false;
   mainNav.classList.toggle('on-dark', dark);
 
-  setTimeout(() => { activateSlide(cur); busy = false; }, 30); // Much faster - was 120ms
+  setTimeout(() => { activateSlide(cur); busy = false; }, 100); // Prevent rapid calls
 }
 
 function activateSlide(n) {
@@ -546,24 +546,31 @@ document.addEventListener('keydown', e => {
 });
 
 // trackpad / wheel (improved for 2-finger swipe on macOS)
-let wheelBuf = 0, wheelTm;
+let wheelBuf = 0, wheelTm, lastWheelTime = 0;
 site.addEventListener('wheel', e => {
   e.preventDefault();
   
-  // More sensitive for trackpad gestures (2-finger swipe)
+  // Prevent multiple rapid slide changes (cooldown period)
+  const now = Date.now();
+  if (now - lastWheelTime < 800) return; // 800ms cooldown between slides
+  
+  // More sensitive for trackpad gestures (2-finger swipe)  
   const sensitivity = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? 1.2 : 0.6;
   wheelBuf += (e.deltaX + e.deltaY * 0.3) * sensitivity;
   
   clearTimeout(wheelTm);
   wheelTm = setTimeout(() => {
-    // Lower threshold for easier swiping
-    if (wheelBuf > 35) setSlide(cur + 1);
+    // Higher threshold to prevent accidental triggers
+    if (wheelBuf > 50) {
+      setSlide(cur + 1);
+      lastWheelTime = now;
+    }
     wheelBuf = 0;
-  }, 15); // Much faster response - was 60ms
+  }, 80); // Longer debounce to group wheel events
 }, { passive: false });
 
 // mouse drag (improved sensitivity)
-let mdX = 0, mdDrag = false;
+let mdX = 0, mdDrag = false, lastMouseTime = 0;
 site.addEventListener('mousedown', e => { mdX = e.clientX; mdDrag = true; slidesEl.style.transition = 'none'; });
 window.addEventListener('mousemove', e => {
   if (!mdDrag) return;
@@ -574,14 +581,26 @@ window.addEventListener('mouseup', e => {
   if (!mdDrag) return;
   mdDrag = false;
   slidesEl.style.transition = 'transform 0.4s cubic-bezier(0.77,0,0.18,1)';
+  
+  // Prevent multiple rapid slide changes (cooldown period)
+  const now = Date.now();
   const d = e.clientX - mdX;
+  if (now - lastMouseTime < 600) {
+    slidesEl.style.transform = `translateX(-${cur * 100}%)`;
+    return;
+  }
+  
   // More sensitive threshold for mouse dragging
-  if (d < -(window.innerWidth * 0.08)) setSlide(cur + 1);
-  else slidesEl.style.transform = `translateX(-${cur * 100}%)`;
+  if (d < -(window.innerWidth * 0.08)) {
+    setSlide(cur + 1);
+    lastMouseTime = now;
+  } else {
+    slidesEl.style.transform = `translateX(-${cur * 100}%)`;
+  }
 });
 
 // touch
-let tX = 0, tDrag = false, tOff = 0;
+let tX = 0, tDrag = false, tOff = 0, lastTouchTime = 0;
 site.addEventListener('touchstart', e => {
   // Handle both single and multi-touch
   const touch = e.touches[0];
@@ -599,13 +618,25 @@ site.addEventListener('touchend', e => {
   tDrag = false;
   slidesEl.style.transition = 'transform 0.4s cubic-bezier(0.77,0,0.18,1)';
   
+  // Prevent multiple rapid slide changes (cooldown period)
+  const now = Date.now();
+  if (now - lastTouchTime < 600) {
+    slidesEl.style.transform = `translateX(-${cur * 100}%)`;
+    tOff = 0;
+    return;
+  }
+  
   // More sensitive threshold for easier swiping, especially with 2+ fingers
   const threshold = e.changedTouches.length >= 2 ? 
     -(window.innerWidth * 0.08) : // 2+ fingers: very sensitive (8% of screen)
     -(window.innerWidth * 0.12);  // 1 finger: moderately sensitive (12% of screen)
     
-  if (tOff < threshold) setSlide(cur + 1);
-  else slidesEl.style.transform = `translateX(-${cur * 100}%)`;
+  if (tOff < threshold) {
+    setSlide(cur + 1);
+    lastTouchTime = now;
+  } else {
+    slidesEl.style.transform = `translateX(-${cur * 100}%)`;
+  }
   tOff = 0;
 });
 
