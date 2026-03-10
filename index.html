@@ -87,6 +87,35 @@ html, body {
 }
 
 /* ── NAV ── */
+/* Mute button */
+#mute-btn {
+  position: fixed;
+  top: 20px; left: 20px;
+  z-index: 1001;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  border-radius: 50%;
+  width: 44px; height: 44px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+#mute-btn:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+}
+#mute-btn svg {
+  width: 20px; height: 20px;
+  fill: var(--white);
+  transition: fill 0.3s ease;
+}
+#mute-btn.muted svg {
+  fill: #ff4444;
+}
+
 nav {
   position: absolute;
   top: 0; left: 0; right: 0;
@@ -373,6 +402,18 @@ nav.on-dark a:hover { color: var(--white); }
 </style>
 </head>
 <body>
+
+<!-- Mute Button -->
+<button id="mute-btn" title="Toggle music">
+  <svg viewBox="0 0 24 24">
+    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+  </svg>
+</button>
+
+<!-- Background Music -->
+<audio id="bg-music" loop preload="auto">
+  <source src="calm-sunday.mp3" type="audio/mpeg">
+</audio>
 
 <!-- LOADER -->
 <div id="loader">
