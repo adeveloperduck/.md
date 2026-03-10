@@ -92,8 +92,8 @@ html, body {
   position: fixed;
   top: 20px; left: 20px;
   z-index: 1001;
-  background: rgba(255,255,255,0.1);
-  border: none;
+  background: rgba(0,0,0,0.7);
+  border: 2px solid rgba(255,255,255,0.2);
   border-radius: 50%;
   width: 44px; height: 44px;
   cursor: pointer;
@@ -104,7 +104,8 @@ html, body {
   backdrop-filter: blur(10px);
 }
 #mute-btn:hover {
-  background: rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.9);
+  border-color: rgba(255,255,255,0.4);
   transform: scale(1.05);
 }
 #mute-btn svg {
@@ -503,11 +504,15 @@ let isMuted = false;
 
 // Initialize background music
 function initMusic() {
-  bgMusic.volume = 0.15; // Low volume for ambient music
+  bgMusic.volume = 0.4; // Higher volume so you can actually hear it
   bgMusic.play().catch(() => {
-    // Auto-play blocked, will start on user interaction
+    // Auto-play blocked, will start on user interaction 
+    console.log('Auto-play blocked, waiting for user interaction');
     document.addEventListener('click', () => {
-      if (!isMuted) bgMusic.play();
+      if (!isMuted) {
+        bgMusic.play();
+        console.log('Music started after user interaction');
+      }
     }, { once: true });
   });
 }
@@ -519,9 +524,11 @@ muteBtn.addEventListener('click', (e) => {
   
   if (isMuted) {
     bgMusic.pause();
-    muteBtn.style.opacity = '0.5';
+    muteBtn.classList.add('muted');
+    muteBtn.style.opacity = '0.7';
   } else {
-    bgMusic.play();
+    bgMusic.play().catch(() => console.log('Could not start music'));
+    muteBtn.classList.remove('muted');
     muteBtn.style.opacity = '1';
   }
   
