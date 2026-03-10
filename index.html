@@ -90,31 +90,67 @@ html, body {
 /* Mute button */
 #mute-btn {
   position: fixed;
-  top: 20px; left: 20px;
+  top: 28px; left: 28px;
   z-index: 1001;
-  background: rgba(0,0,0,0.7);
-  border: 2px solid rgba(255,255,255,0.2);
-  border-radius: 50%;
-  width: 44px; height: 44px;
+  background: none;
+  border: none;
+  width: 40px; height: 40px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  transition: opacity 0.2s ease;
+  opacity: 0.6;
 }
 #mute-btn:hover {
-  background: rgba(0,0,0,0.9);
-  border-color: rgba(255,255,255,0.4);
-  transform: scale(1.05);
+  opacity: 1;
 }
 #mute-btn svg {
-  width: 20px; height: 20px;
-  fill: var(--white);
-  transition: fill 0.3s ease;
+  width: 18px; height: 18px;
+  fill: var(--black);
+  transition: fill 0.2s ease;
 }
 #mute-btn.muted svg {
-  fill: #ff4444;
+  fill: #888888;
+}
+
+/* Music Visualizer */
+#music-visualizer {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+  height: 24px;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+#music-visualizer.active {
+  opacity: 0.4;
+}
+.visualizer-bar {
+  width: 2px;
+  background: var(--black);
+  border-radius: 1px;
+  animation: visualize 0.8s ease-in-out infinite alternate;
+  transform-origin: bottom;
+}
+.visualizer-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+.visualizer-bar:nth-child(2) { height: 16px; animation-delay: 0.1s; }
+.visualizer-bar:nth-child(3) { height: 12px; animation-delay: 0.2s; }
+.visualizer-bar:nth-child(4) { height: 20px; animation-delay: 0.1s; }
+.visualizer-bar:nth-child(5) { height: 10px; animation-delay: 0.3s; }
+.visualizer-bar:nth-child(6) { height: 16px; animation-delay: 0.2s; }
+.visualizer-bar:nth-child(7) { height: 14px; animation-delay: 0.4s; }
+.visualizer-bar:nth-child(8) { height: 18px; animation-delay: 0.1s; }
+.visualizer-bar:nth-child(9) { height: 12px; animation-delay: 0.5s; }
+
+@keyframes visualize {
+  from { transform: scaleY(0.3); }
+  to { transform: scaleY(1); }
 }
 
 nav {
@@ -411,6 +447,19 @@ nav.on-dark a:hover { color: var(--white); }
   </svg>
 </button>
 
+<!-- Music Visualizer -->
+<div id="music-visualizer">
+  <div class="visualizer-bar"></div>
+  <div class="visualizer-bar"></div>
+  <div class="visualizer-bar"></div>
+  <div class="visualizer-bar"></div>
+  <div class="visualizer-bar"></div>
+  <div class="visualizer-bar"></div>
+  <div class="visualizer-bar"></div>
+  <div class="visualizer-bar"></div>
+  <div class="visualizer-bar"></div>
+</div>
+
 <!-- Background Music -->
 <audio id="bg-music" loop preload="auto">
   <source src="Pufino - Air (freetouse.com).mp3" type="audio/mpeg">
@@ -500,6 +549,7 @@ const site      = document.getElementById('site');
 // ── BACKGROUND MUSIC ─────────────────────────────────────────────────────────
 const bgMusic = document.getElementById('bg-music');
 const muteBtn = document.getElementById('mute-btn');
+const visualizer = document.getElementById('music-visualizer');
 let isMuted = false;
 
 // Initialize background music
@@ -511,9 +561,19 @@ function initMusic() {
     document.addEventListener('click', () => {
       if (!isMuted) {
         bgMusic.play();
+        visualizer.classList.add('active');
         console.log('Music started after user interaction');
       }
     }, { once: true });
+  });
+  
+  // Show visualizer when music starts playing
+  bgMusic.addEventListener('play', () => {
+    visualizer.classList.add('active');
+  });
+  
+  bgMusic.addEventListener('pause', () => {
+    visualizer.classList.remove('active');
   });
 }
 
@@ -525,11 +585,11 @@ muteBtn.addEventListener('click', (e) => {
   if (isMuted) {
     bgMusic.pause();
     muteBtn.classList.add('muted');
-    muteBtn.style.opacity = '0.7';
+    visualizer.classList.remove('active');
   } else {
     bgMusic.play().catch(() => console.log('Could not start music'));
     muteBtn.classList.remove('muted');
-    muteBtn.style.opacity = '1';
+    visualizer.classList.add('active');
   }
   
   muteBtn.title = isMuted ? 'Unmute music' : 'Mute music';
