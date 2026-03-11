@@ -88,6 +88,15 @@
     100% { transform: rotate(0deg); }
   }
 
+  .mexican-wave {
+    display: inline-block;
+    animation: mexican-wave 2s ease-in-out infinite;
+  }
+  @keyframes mexican-wave {
+    0%, 70%, 100% { transform: translateY(0); }
+    35% { transform: translateY(-8px); }
+  }
+
   #confetti-canvas {
     position: fixed;
     inset: 0;
@@ -227,7 +236,7 @@
     { text: 'out',             color: 'grey' },
     { text: 'my',              color: 'grey' },
     { text: 'ideas.',           color: 'dark', link: 'ideas.html' },
-    { text: 'Welcome',         color: 'dark' },
+    { text: 'Welcome',         color: 'dark', mexicanWave: true },
     { text: 'to',              color: 'grey' },
     { text: 'my',              color: 'grey' },
     { text: 'website',          color: 'dark' },
@@ -260,6 +269,15 @@
       });
       link.textContent = w.text;
       span.appendChild(link);
+    } else if (w.mexicanWave) {
+      // Split word into individual letters for Mexican wave effect
+      w.text.split('').forEach((letter, letterIndex) => {
+        const letterSpan = document.createElement('span');
+        letterSpan.classList.add('mexican-wave');
+        letterSpan.textContent = letter;
+        letterSpan.style.animationDelay = `${letterIndex * 0.1}s`;
+        span.appendChild(letterSpan);
+      });
     } else if (w.wave) {
       const inner = document.createElement('span');
       inner.classList.add('wave');
