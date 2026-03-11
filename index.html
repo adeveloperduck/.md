@@ -312,6 +312,9 @@
     });
   }
 
+  // Reset scroll position to show first word on page load/refresh
+  window.scrollTo(0, 0);
+  
   window.addEventListener('scroll', render, { passive: true });
   render();
 
