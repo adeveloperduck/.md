@@ -28,6 +28,12 @@
     justify-content: center;
     padding: 2rem;
   }
+  @media (max-width: 768px) {
+    body { padding: 1.5rem; }
+  }
+  @media (max-width: 480px) {
+    body { padding: 1rem; }
+  }
 
   .container {
     max-width: 600px;
@@ -48,6 +54,12 @@
     flex-direction: column;
     gap: 1.5rem;
     margin-bottom: 4rem;
+  }
+  @media (max-width: 768px) {
+    .ideas-list { 
+      gap: 1.2rem;
+      margin-bottom: 3rem;
+    }
   }
 
   .idea-link {

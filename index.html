@@ -51,6 +51,20 @@
     /* center-align the text */
     text-align: center;
   }
+  @media (max-width: 768px) {
+    .words-container {
+      padding: 0 6vw;
+      font-size: clamp(1.25rem, 5.5vw, 2.5rem);
+      line-height: 1.35;
+    }
+  }
+  @media (max-width: 480px) {
+    .words-container {
+      padding: 0 5vw;
+      font-size: clamp(1.1rem, 6vw, 2rem);
+      line-height: 1.4;
+    }
+  }
 
   .word {
     display: inline;
@@ -118,6 +132,9 @@
     pointer-events: none;
     z-index: 10;
   }
+  @media (max-width: 768px) {
+    .hint { bottom: 1.5rem; }
+  }
   .hint span {
     font-size: 0.62rem;
     letter-spacing: 0.2em;
@@ -145,6 +162,12 @@
     pointer-events: none;
     z-index: 11;
   }
+  @media (max-width: 768px) {
+    .social-links { 
+      bottom: 1.5rem;
+      gap: 1.8rem;
+    }
+  }
   .social-links.show {
     opacity: 1;
     pointer-events: auto;
@@ -168,6 +191,12 @@
     stroke-width: 1.4;
     stroke-linecap: round;
     stroke-linejoin: round;
+  }
+  @media (max-width: 768px) {
+    .social-links svg {
+      width: 20px;
+      height: 20px;
+    }
   }
 </style>
 </head>
