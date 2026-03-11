@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ideas - nav</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;1,14..32,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --dark: #111111;
+    --grey: #c0c0c0;
+  }
+
+  body {
+    background: var(--bg);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .container {
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--dark);
+    margin-bottom: 3rem;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+  }
+
+  .ideas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .idea-link {
+    font-size: clamp(1.25rem, 3vw, 2rem);
+    color: var(--grey);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .idea-link:hover {
+    color: var(--dark);
+  }
+
+  .back-button {
+    font-size: 1rem;
+    color: var(--grey);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .back-button:hover {
+    color: var(--dark);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>ideas</h1>
+  
+  <div class="ideas-list">
+    <a href="https://adeveloperduck.github.io/idea-1/" class="idea-link" target="_blank" rel="noopener noreferrer">
+      idea 1
+    </a>
+    
+    <a href="https://adeveloperduck.github.io/idea-2/" class="idea-link" target="_blank" rel="noopener noreferrer">
+      idea 2
+    </a>
+    
+    <a href="https://adeveloperduck.github.io/idea-3/" class="idea-link" target="_blank" rel="noopener noreferrer">
+      idea 3
+    </a>
+  </div>
+
+  <a href="index.html" class="back-button">
+    back to home
+  </a>
+</div>
+
+</body>
+</html>
