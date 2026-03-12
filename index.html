@@ -580,7 +580,7 @@
 
   const N           = words.length;
   const PX_PER_WORD = 180;
-  const END_SCROLL  = 400;
+  const END_SCROLL  = 0;
   track.style.height = (PX_PER_WORD * N + END_SCROLL + window.innerHeight) + 'px';
 
   let allRevealed = false;
@@ -590,51 +590,52 @@
     const maxScroll = track.scrollHeight - window.innerHeight;
     hint.classList.toggle('hidden', scrollY > 10);
 
-    const revealStart = maxScroll - END_SCROLL;
+    const ramp = Math.min(1, scrollY / (PX_PER_WORD * 3));
+    const holdRadius = PX_PER_WORD * (0.5 + ramp * 2.0);
+    const fadeRadius = PX_PER_WORD * (1.4 + ramp * 2.1);
 
-    if (scrollY >= revealStart) {
-      const t = (scrollY - revealStart) / END_SCROLL;
-      if (t >= 0.3 && !allRevealed) {
-        allRevealed = true;
-        els.forEach(el => el.classList.add('revealed'));
-        launchConfetti();
-        setTimeout(() => {
-          document.getElementById('ideas-link').classList.add('show');
-          document.getElementById('social-links').classList.add('show');
-          document.getElementById('hint').style.opacity = '0';
-        }, 2000);
-      }
-      return;
+    // Check if last word ("website") is fully visible (within holdRadius)
+    const lastWordPeak = (N - 1) * PX_PER_WORD + PX_PER_WORD / 2;
+    const lastWordDist = Math.abs(scrollY - lastWordPeak);
+    const lastWordVisible = lastWordDist <= holdRadius;
+
+    if (lastWordVisible && !allRevealed) {
+      allRevealed = true;
+      els.forEach(el => el.classList.add('revealed'));
+      launchConfetti();
+      setTimeout(() => {
+        document.getElementById('ideas-link').classList.add('show');
+        document.getElementById('social-links').classList.add('show');
+        document.getElementById('hint').style.opacity = '0';
+      }, 2000);
     }
 
-    if (allRevealed) {
+    if (!lastWordVisible && allRevealed) {
       allRevealed = false;
       els.forEach(el => el.classList.remove('revealed'));
       document.getElementById('ideas-link').classList.remove('show');
       document.getElementById('social-links').classList.remove('show');
     }
 
-    const ramp = Math.min(1, scrollY / (PX_PER_WORD * 3));
+    if (!allRevealed) {
+      els.forEach((el, i) => {
+        const peak = i * PX_PER_WORD + PX_PER_WORD / 2;
+        const dist = Math.abs(scrollY - peak);
 
-    els.forEach((el, i) => {
-      const peak       = i * PX_PER_WORD + PX_PER_WORD / 2;
-      const dist       = Math.abs(scrollY - peak);
-      const holdRadius = PX_PER_WORD * (0.5 + ramp * 2.0);
-      const fadeRadius = PX_PER_WORD * (1.4 + ramp * 2.1);
+        let a;
+        if (dist <= holdRadius) {
+          a = 1;
+        } else if (dist <= fadeRadius) {
+          const t = (dist - holdRadius) / (fadeRadius - holdRadius);
+          a = 1 - t * t;
+        } else {
+          a = 0;
+        }
 
-      let a;
-      if (dist <= holdRadius) {
-        a = 1;
-      } else if (dist <= fadeRadius) {
-        const t = (dist - holdRadius) / (fadeRadius - holdRadius);
-        a = 1 - t * t;
-      } else {
-        a = 0;
-      }
-
-      el.style.opacity = 0.12 + a * 0.88;
-      el.style.filter  = `blur(${((1 - a) * 8).toFixed(2)}px)`;
-    });
+        el.style.opacity = 0.12 + a * 0.88;
+        el.style.filter  = `blur(${((1 - a) * 8).toFixed(2)}px)`;
+      });
+    }
   }
 
   // Scroll preservation: only save when navigating to internal pages,
@@ -660,9 +661,8 @@
     window.scrollTo(0, pos);
     pageContent.classList.add('visible');
     // Immediately reveal everything without confetti
-    const maxScroll = track.scrollHeight - window.innerHeight;
-    const revealStart = maxScroll - END_SCROLL;
-    if (pos >= revealStart) {
+    const lastWordPeakRestore = (N - 1) * PX_PER_WORD + PX_PER_WORD / 2;
+    if (pos >= lastWordPeakRestore) {
       allRevealed = true;
       els.forEach(el => el.classList.add('revealed'));
       document.getElementById('ideas-link').classList.add('show');
