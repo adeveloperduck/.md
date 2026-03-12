@@ -427,48 +427,53 @@
     });
   }
 
-  // Scroll preservation: save position before navigating away,
-  // restore on back/forward, reset on fresh load/refresh
+  // Scroll preservation: only save when navigating to internal pages,
+  // so refresh always resets but back-button restores
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
   }
 
-  const isBackForward = (performance.getEntriesByType('navigation')[0]?.type === 'back_forward');
-  const savedScroll = sessionStorage.getItem('scrollY');
+  // Intercept clicks on internal links to save scroll before leaving
+  document.querySelectorAll('.ideas-link a').forEach(link => {
+    link.addEventListener('click', () => {
+      sessionStorage.setItem('scrollY', String(window.scrollY));
+    });
+  });
 
-  if (isBackForward && savedScroll !== null) {
+  // Restore saved scroll if available (set by internal link click), then clear it
+  const savedScroll = sessionStorage.getItem('scrollY');
+  let restoringScroll = false;
+  if (savedScroll !== null) {
+    restoringScroll = true;
     const pos = parseInt(savedScroll, 10);
-    window.scrollTo(0, pos);
-    // Also restore after a brief delay in case layout hasn't settled
-    requestAnimationFrame(() => window.scrollTo(0, pos));
-  } else {
     sessionStorage.removeItem('scrollY');
+    window.scrollTo(0, pos);
+    // Immediately reveal everything without confetti
+    const maxScroll = track.scrollHeight - window.innerHeight;
+    const revealStart = maxScroll - END_SCROLL;
+    if (pos >= revealStart) {
+      allRevealed = true;
+      els.forEach(el => el.classList.add('revealed'));
+      document.getElementById('ideas-link').classList.add('show');
+      document.getElementById('social-links').classList.add('show');
+      document.getElementById('hint').style.opacity = '0';
+    }
+    requestAnimationFrame(() => {
+      window.scrollTo(0, pos);
+      render();
+      restoringScroll = false;
+    });
+  } else {
     window.scrollTo(0, 0);
   }
 
-  // Also handle bfcache restoration (Safari / some browsers)
+  // Handle bfcache (Safari)
   window.addEventListener('pageshow', (e) => {
-    if (e.persisted) {
-      const pos = sessionStorage.getItem('scrollY');
-      if (pos !== null) {
-        window.scrollTo(0, parseInt(pos, 10));
-        render();
-      }
-    }
+    if (e.persisted) render();
   });
 
   window.addEventListener('scroll', render, { passive: true });
   render();
-
-  // Save scroll position before leaving
-  window.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') {
-      sessionStorage.setItem('scrollY', String(window.scrollY));
-    }
-  });
-  window.addEventListener('beforeunload', () => {
-    sessionStorage.setItem('scrollY', String(window.scrollY));
-  });
 
   /* ── Confetti ── */
   const canvas = document.getElementById('confetti-canvas');
