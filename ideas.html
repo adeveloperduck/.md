@@ -12,13 +12,13 @@
   :root {
     --bg: #ffffff;
     --dark: #111111;
-    --grey: #c0c0c0;
+    --grey: #6b7280;
   }
 
   [data-theme="dark"] {
     --bg: #111111;
     --dark: #f0f0f0;
-    --grey: #555555;
+    --grey: #9ca3af;
   }
 
   html { background: var(--bg); transition: background 0.3s ease; }
@@ -35,7 +35,6 @@
     align-items: center;
     justify-content: center;
     padding: 2rem;
-    animation: pageEnter 0.4s ease;
     transition: background 0.3s ease, opacity 0.4s ease;
   }
   @media (max-width: 768px) {
@@ -54,9 +53,19 @@
   h1 {
     font-size: clamp(2rem, 4vw, 3rem);
     color: var(--dark);
-    margin-bottom: 3rem;
+    margin-bottom: 1.5rem;
     font-weight: 400;
     letter-spacing: -0.025em;
+  }
+
+  .description {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: var(--grey);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .ideas-list {
@@ -122,10 +131,6 @@
   [data-theme="dark"] .theme-toggle .sun-icon { display: block; }
   [data-theme="dark"] .theme-toggle .moon-icon { display: none; }
 
-  @keyframes pageEnter {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
   body.page-exit {
     opacity: 0 !important;
   }
@@ -134,7 +139,8 @@
   (function() {
     var saved = localStorage.getItem('theme');
     var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.setAttribute('data-theme', saved || (prefersDark ? 'dark' : 'light'));
+    var theme = saved || (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
   })();
 </script>
 </head>
@@ -148,17 +154,19 @@
 <div class="container">
   <h1>ideas</h1>
   
+  <p class="description">ideas are a series of <span style="color: var(--dark);">unpolished, little apps</span> that don't deserve to be turned into <span style="color: var(--dark);">real projects</span> but still deserve a place somewhere.</p>
+  
   <div class="ideas-list">
     <a href="https://adeveloperduck.github.io/idea-1/" class="idea-link" target="_blank" rel="noopener noreferrer">
-      idea 1
+      idea 1 - click counter
     </a>
     
     <a href="https://adeveloperduck.github.io/idea-2/" class="idea-link" target="_blank" rel="noopener noreferrer">
-      idea 2
+      idea 2 - tasknote
     </a>
     
     <a href="https://adeveloperduck.github.io/idea-3/" class="idea-link" target="_blank" rel="noopener noreferrer">
-      idea 3
+      idea 3 - quote of the day
     </a>
   </div>
 
@@ -168,6 +176,18 @@
 </div>
 
 <script>
+  window.addEventListener('pageshow', () => {
+    var saved = localStorage.getItem('theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', saved || (prefersDark ? 'dark' : 'light'));
+  });
+
+  window.addEventListener('storage', (e) => {
+    if (e.key !== 'theme') return;
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', e.newValue || (prefersDark ? 'dark' : 'light'));
+  });
+
   document.getElementById('theme-toggle').addEventListener('click', () => {
     const current = document.documentElement.getAttribute('data-theme');
     const next = current === 'dark' ? 'light' : 'dark';
