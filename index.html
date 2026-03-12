@@ -398,11 +398,13 @@
     const holdRadius = PX_PER_WORD * (0.5 + ramp * 2.0);
     const fadeRadius = PX_PER_WORD * (1.4 + ramp * 2.1);
 
-    // Auto-scroll when reaching first letter of "website" while scrolling forward
-    const websiteWordStart = (N - 1) * PX_PER_WORD;
-    if (isScrollingForward && scrollY >= websiteWordStart && !autoScrollTriggered) {
+    // Auto-scroll when "my" is unblurred while scrolling forward
+    const myWordPeak = 24 * PX_PER_WORD + PX_PER_WORD / 2;
+    const myWordDist = Math.abs(scrollY - myWordPeak);
+    const myWordVisible = myWordDist <= holdRadius;
+    if (isScrollingForward && myWordVisible && !autoScrollTriggered) {
       autoScrollTriggered = true;
-      window.scrollBy({ top: 200, behavior: 'smooth' });
+      window.scrollBy({ top: 400, behavior: 'smooth' });
     }
     if (!isScrollingForward) {
       autoScrollTriggered = false;
