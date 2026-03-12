@@ -241,9 +241,44 @@
       height: 24px;
     }
   }
+
+  /* ── Loader ── */
+  .loader-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 20px 0 var(--bg);
+  }
+  .loader-overlay.slide-up {
+    animation: loader-slide-up 0.85s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  }
+  @keyframes loader-slide-up {
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(-100%); }
+  }
+  .loader-counter {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    color: var(--dark);
+    font-variant-numeric: tabular-nums;
+    user-select: none;
+  }
+  body.loading {
+    overflow: hidden;
+  }
 </style>
 </head>
 <body>
+
+<div class="loader-overlay" id="loader">
+  <div class="loader-counter" id="loader-number">0</div>
+</div>
 
 <canvas id="confetti-canvas"></canvas>
 
@@ -285,6 +320,47 @@
 </div>
 
 <script>
+  // ── Loader ──
+  document.body.classList.add('loading');
+  const loaderEl   = document.getElementById('loader');
+  const loaderNum  = document.getElementById('loader-number');
+
+  function runLoader() {
+    const duration = 2400;
+    const start = performance.now();
+    let displayed = -1;
+
+    function tick(now) {
+      const elapsed = now - start;
+      // smooth ease-out curve — fast start, gentle finish
+      let p = Math.min(elapsed / duration, 1);
+      p = 1 - Math.pow(1 - p, 3);
+      const val = Math.min(Math.round(p * 100), 100);
+
+      if (val !== displayed) {
+        displayed = val;
+        loaderNum.textContent = val;
+      }
+
+      if (p < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        // brief hold, then slide the overlay up
+        setTimeout(() => {
+          loaderEl.classList.add('slide-up');
+          document.body.classList.remove('loading');
+          loaderEl.addEventListener('animationend', () => {
+            loaderEl.remove();
+          }, { once: true });
+        }, 350);
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // Wait for font + page ready, then run
+  document.fonts.ready.then(() => runLoader());
+
   const words = [
     { text: 'hello',           color: 'dark', },
     { text: '👋',              color: 'dark', wave: true },
