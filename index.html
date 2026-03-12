@@ -251,14 +251,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 20px 0 var(--bg);
   }
-  .loader-overlay.slide-up {
-    animation: loader-slide-up 0.85s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  .loader-overlay.reveal {
+    animation: loader-reveal 1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
   }
-  @keyframes loader-slide-up {
-    0%   { transform: translateY(0); }
-    100% { transform: translateY(-100%); }
+  @keyframes loader-reveal {
+    0%   { clip-path: inset(0 0 0 0); }
+    100% { clip-path: inset(0 0 100% 0); }
   }
   .loader-counter {
     font-family: 'Inter', sans-serif;
@@ -268,9 +267,24 @@
     color: var(--dark);
     font-variant-numeric: tabular-nums;
     user-select: none;
+    transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
+  }
+  .loader-counter.fade-out {
+    opacity: 0;
+    transform: scale(0.85);
+    filter: blur(8px);
   }
   body.loading {
     overflow: hidden;
+  }
+  .page-content {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .page-content.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 </style>
 </head>
@@ -282,6 +296,7 @@
 
 <canvas id="confetti-canvas"></canvas>
 
+<div class="page-content" id="page-content">
 <div class="scroll-track" id="track">
   <div class="stage">
     <div class="words-container" id="container"></div>
@@ -318,12 +333,14 @@
     </svg>
   </a>
 </div>
+</div>
 
 <script>
   // ── Loader ──
   document.body.classList.add('loading');
   const loaderEl   = document.getElementById('loader');
   const loaderNum  = document.getElementById('loader-number');
+  const pageContent = document.getElementById('page-content');
 
   function runLoader() {
     const duration = 2400;
@@ -345,14 +362,20 @@
       if (p < 1) {
         requestAnimationFrame(tick);
       } else {
-        // brief hold, then slide the overlay up
+        // Step 1: fade out the counter
         setTimeout(() => {
-          loaderEl.classList.add('slide-up');
+          loaderNum.classList.add('fade-out');
+        }, 250);
+
+        // Step 2: reveal overlay + show content
+        setTimeout(() => {
+          loaderEl.classList.add('reveal');
           document.body.classList.remove('loading');
+          pageContent.classList.add('visible');
           loaderEl.addEventListener('animationend', () => {
             loaderEl.remove();
           }, { once: true });
-        }, 350);
+        }, 650);
       }
     }
     requestAnimationFrame(tick);
@@ -526,6 +549,7 @@
     const pos = parseInt(savedScroll, 10);
     sessionStorage.removeItem('scrollY');
     window.scrollTo(0, pos);
+    pageContent.classList.add('visible');
     // Immediately reveal everything without confetti
     const maxScroll = track.scrollHeight - window.innerHeight;
     const revealStart = maxScroll - END_SCROLL;
