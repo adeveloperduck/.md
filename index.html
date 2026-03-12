@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>nav</title>
+
+<!-- Open Graph -->
+<meta property="og:title" content="nav">
+<meta property="og:description" content="student developer from perth, western australia.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://adeveloperduck.github.io">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nav">
+<meta name="twitter:description" content="student developer from perth, western australia.">
+<meta name="description" content="student developer from perth, western australia.">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;1,14..32,400&display=swap" rel="stylesheet">
 <style>
@@ -416,11 +427,48 @@
     });
   }
 
-  // Reset scroll position to show first word on page load/refresh
-  window.scrollTo(0, 0);
-  
+  // Scroll preservation: save position before navigating away,
+  // restore on back/forward, reset on fresh load/refresh
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+
+  const isBackForward = (performance.getEntriesByType('navigation')[0]?.type === 'back_forward');
+  const savedScroll = sessionStorage.getItem('scrollY');
+
+  if (isBackForward && savedScroll !== null) {
+    const pos = parseInt(savedScroll, 10);
+    window.scrollTo(0, pos);
+    // Also restore after a brief delay in case layout hasn't settled
+    requestAnimationFrame(() => window.scrollTo(0, pos));
+  } else {
+    sessionStorage.removeItem('scrollY');
+    window.scrollTo(0, 0);
+  }
+
+  // Also handle bfcache restoration (Safari / some browsers)
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+      const pos = sessionStorage.getItem('scrollY');
+      if (pos !== null) {
+        window.scrollTo(0, parseInt(pos, 10));
+        render();
+      }
+    }
+  });
+
   window.addEventListener('scroll', render, { passive: true });
   render();
+
+  // Save scroll position before leaving
+  window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      sessionStorage.setItem('scrollY', String(window.scrollY));
+    }
+  });
+  window.addEventListener('beforeunload', () => {
+    sessionStorage.setItem('scrollY', String(window.scrollY));
+  });
 
   /* ── Confetti ── */
   const canvas = document.getElementById('confetti-canvas');
