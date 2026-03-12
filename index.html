@@ -3,40 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Navneet Dagdiya | Nav's Portfolio | Swift Developer</title>
+<title>nav</title>
 
 <!-- Open Graph -->
-<meta property="og:title" content="Navneet Dagdiya | Nav's Portfolio">
-<meta property="og:description" content="Portfolio of Navneet Dagdiya (Nav), a student developer from Perth, Western Australia building Swift and SwiftUI projects.">
+<meta property="og:title" content="nav">
+<meta property="og:description" content="student developer from perth, western australia.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://adeveloperduck.github.io">
-<meta property="og:site_name" content="Nav's Portfolio">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Navneet Dagdiya | Nav's Portfolio">
-<meta name="twitter:description" content="Student developer from Perth, Western Australia working with Swift and SwiftUI.">
-<meta name="description" content="Navneet Dagdiya's portfolio. Nav is a student developer from Perth, Western Australia focused on Swift and SwiftUI projects.">
-<meta name="robots" content="index, follow, max-image-preview:large">
-<link rel="canonical" href="https://adeveloperduck.github.io/">
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Navneet Dagdiya",
-  "alternateName": ["Nav", "adeveloperduck"],
-  "url": "https://adeveloperduck.github.io/",
-  "jobTitle": "Student Developer",
-  "knowsAbout": ["Swift", "SwiftUI"],
-  "homeLocation": {
-    "@type": "Place",
-    "name": "Perth, Western Australia"
-  },
-  "sameAs": [
-    "https://github.com/adeveloperduck",
-    "https://discord.com/users/1337320225066061911"
-  ]
-}
-</script>
+<meta name="twitter:title" content="nav">
+<meta name="twitter:description" content="student developer from perth, western australia.">
+<meta name="description" content="student developer from perth, western australia.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;1,14..32,400&display=swap" rel="stylesheet">
@@ -46,16 +23,10 @@
   :root {
     --bg: #ffffff;
     --dark: #111111;
-    --grey: #6b7280;
+    --grey: #c0c0c0;
   }
 
-  [data-theme="dark"] {
-    --bg: #111111;
-    --dark: #f0f0f0;
-    --grey: #9ca3af;
-  }
-
-  html { scroll-behavior: auto; transition: background 0.3s ease; }
+  html { scroll-behavior: auto; }
 
   body {
     background: var(--bg);
@@ -64,11 +35,6 @@
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
-    transition: background 0.3s ease, opacity 0.4s ease;
-  }
-
-  body.page-exit {
-    opacity: 0;
   }
 
   .scroll-track { position: relative; }
@@ -197,12 +163,6 @@
     50%       { transform: translateY(6px); }
   }
   .hint.hidden { opacity: 0; }
-  [data-theme="dark"] .hint {
-    color: #ffffff;
-  }
-  [data-theme="dark"] .hint svg {
-    stroke: #ffffff !important;
-  }
 
   .social-links {
     position: fixed;
@@ -281,78 +241,16 @@
       height: 24px;
     }
   }
-
-
-  .page-content {
-    opacity: 1;
-  }
-
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  /* Theme toggle */
-  .theme-toggle {
-    position: fixed;
-    top: 2rem;
-    right: 2rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 100;
-    color: var(--grey);
-    transition: color 0.3s ease;
-    padding: 0.5rem;
-  }
-  .theme-toggle:hover { color: var(--dark); }
-  .theme-toggle svg {
-    width: 20px;
-    height: 20px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    display: block;
-  }
-  .theme-toggle .sun-icon { display: none; }
-  [data-theme="dark"] .theme-toggle .sun-icon { display: block; }
-  [data-theme="dark"] .theme-toggle .moon-icon { display: none; }
 </style>
-<script>
-  (function() {
-    var saved = localStorage.getItem('theme');
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.setAttribute('data-theme', saved || (prefersDark ? 'dark' : 'light'));
-  })();
-</script>
 </head>
 <body>
 
-<h1 class="sr-only">Navneet Dagdiya - Nav's Portfolio</h1>
-<p class="sr-only">Student developer from Perth, Western Australia building Swift and SwiftUI projects.</p>
-
-<button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
-  <svg class="moon-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-  <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-</button>
-
 <canvas id="confetti-canvas"></canvas>
 
-<div class="page-content" id="page-content">
 <div class="scroll-track" id="track">
   <div class="stage">
     <div class="words-container" id="container"></div>
   </div>
-</div>
 </div>
 
 <div class="hint" id="hint">
@@ -387,7 +285,6 @@
 </div>
 
 <script>
-
   const words = [
     { text: 'hello',           color: 'dark', },
     { text: '👋',              color: 'dark', wave: true },
@@ -474,79 +371,62 @@
   });
 
   const N           = words.length;
-  const PX_PER_WORD = 180;
-  const END_SCROLL  = 0;
+  const PX_PER_WORD = 120;
+  const END_SCROLL  = 400;
   track.style.height = (PX_PER_WORD * N + END_SCROLL + window.innerHeight) + 'px';
 
   let allRevealed = false;
-  let prevScrollY = 0;
-  let autoScrollTriggered = false;
 
   function render() {
     const scrollY   = window.scrollY;
-    const isScrollingForward = scrollY > prevScrollY;
-    prevScrollY = scrollY;
     const maxScroll = track.scrollHeight - window.innerHeight;
     hint.classList.toggle('hidden', scrollY > 10);
 
-    const ramp = Math.min(1, scrollY / (PX_PER_WORD * 3));
-    const holdRadius = PX_PER_WORD * (0.5 + ramp * 2.0);
-    const fadeRadius = PX_PER_WORD * (1.4 + ramp * 2.1);
+    const revealStart = maxScroll - END_SCROLL;
 
-    // Auto-scroll when "my" is unblurred while scrolling forward
-    const myWordPeak = 24 * PX_PER_WORD + PX_PER_WORD / 2;
-    const myWordDist = Math.abs(scrollY - myWordPeak);
-    const myWordVisible = myWordDist <= holdRadius;
-    if (isScrollingForward && myWordVisible && !autoScrollTriggered) {
-      autoScrollTriggered = true;
-      window.scrollBy({ top: 400, behavior: 'smooth' });
-    }
-    if (!isScrollingForward) {
-      autoScrollTriggered = false;
-    }
-
-    // Check if last word ("website") is fully visible (within holdRadius)
-    const lastWordPeak = (N - 1) * PX_PER_WORD + PX_PER_WORD / 2;
-    const lastWordDist = Math.abs(scrollY - lastWordPeak);
-    const lastWordVisible = lastWordDist <= holdRadius;
-
-    if (lastWordVisible && !allRevealed) {
-      allRevealed = true;
-      els.forEach(el => el.classList.add('revealed'));
-      launchConfetti();
-      setTimeout(() => {
-        document.getElementById('ideas-link').classList.add('show');
-        document.getElementById('social-links').classList.add('show');
-        document.getElementById('hint').style.opacity = '0';
-      }, 2000);
+    if (scrollY >= revealStart) {
+      const t = (scrollY - revealStart) / END_SCROLL;
+      if (t >= 0.3 && !allRevealed) {
+        allRevealed = true;
+        els.forEach(el => el.classList.add('revealed'));
+        launchConfetti();
+        setTimeout(() => {
+          document.getElementById('ideas-link').classList.add('show');
+          document.getElementById('social-links').classList.add('show');
+          document.getElementById('hint').style.opacity = '0';
+        }, 2000);
+      }
+      return;
     }
 
-    if (!lastWordVisible && allRevealed) {
+    if (allRevealed) {
       allRevealed = false;
       els.forEach(el => el.classList.remove('revealed'));
       document.getElementById('ideas-link').classList.remove('show');
       document.getElementById('social-links').classList.remove('show');
     }
 
-    if (!allRevealed) {
-      els.forEach((el, i) => {
-        const peak = i * PX_PER_WORD + PX_PER_WORD / 2;
-        const dist = Math.abs(scrollY - peak);
+    const ramp = Math.min(1, scrollY / (PX_PER_WORD * 3));
 
-        let a;
-        if (dist <= holdRadius) {
-          a = 1;
-        } else if (dist <= fadeRadius) {
-          const t = (dist - holdRadius) / (fadeRadius - holdRadius);
-          a = 1 - t * t;
-        } else {
-          a = 0;
-        }
+    els.forEach((el, i) => {
+      const peak       = i * PX_PER_WORD + PX_PER_WORD / 2;
+      const dist       = Math.abs(scrollY - peak);
+      const holdRadius = PX_PER_WORD * (0.5 + ramp * 2.0);
+      const fadeRadius = PX_PER_WORD * (1.4 + ramp * 2.1);
 
-        el.style.opacity = 0.12 + a * 0.88;
-        el.style.filter  = `blur(${((1 - a) * 8).toFixed(2)}px)`;
-      });
-    }
+      let a;
+      if (dist <= holdRadius) {
+        a = 1;
+      } else if (dist <= fadeRadius) {
+        const t = (dist - holdRadius) / (fadeRadius - holdRadius);
+        a = 1 - t * t;
+      } else {
+        a = 0;
+      }
+
+      el.style.opacity = 0.12 + a * 0.88;
+      el.style.filter  = `blur(${((1 - a) * 8).toFixed(2)}px)`;
+    });
   }
 
   // Scroll preservation: only save when navigating to internal pages,
@@ -555,18 +435,10 @@
     history.scrollRestoration = 'manual';
   }
 
-  // Fade out before navigation to avoid abrupt page flashes.
-  let isNavigating = false;
+  // Intercept clicks on internal links to save scroll before leaving
   document.querySelectorAll('.ideas-link a').forEach(link => {
-    link.addEventListener('click', (e) => {
-      if (isNavigating) return;
-      e.preventDefault();
-      isNavigating = true;
+    link.addEventListener('click', () => {
       sessionStorage.setItem('scrollY', String(window.scrollY));
-      document.body.classList.add('page-exit');
-      setTimeout(() => {
-        window.location.href = link.getAttribute('href');
-      }, 220);
     });
   });
 
@@ -579,8 +451,9 @@
     sessionStorage.removeItem('scrollY');
     window.scrollTo(0, pos);
     // Immediately reveal everything without confetti
-    const lastWordPeakRestore = (N - 1) * PX_PER_WORD + PX_PER_WORD / 2;
-    if (pos >= lastWordPeakRestore) {
+    const maxScroll = track.scrollHeight - window.innerHeight;
+    const revealStart = maxScroll - END_SCROLL;
+    if (pos >= revealStart) {
       allRevealed = true;
       els.forEach(el => el.classList.add('revealed'));
       document.getElementById('ideas-link').classList.add('show');
@@ -598,20 +471,7 @@
 
   // Handle bfcache (Safari)
   window.addEventListener('pageshow', (e) => {
-    // Re-apply theme in case user changed it on another page
-    var saved = localStorage.getItem('theme');
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.setAttribute('data-theme', saved || (prefersDark ? 'dark' : 'light'));
-    document.body.classList.remove('page-exit');
-    isNavigating = false;
     if (e.persisted) render();
-  });
-
-  // Keep theme in sync across tabs/pages.
-  window.addEventListener('storage', (e) => {
-    if (e.key !== 'theme') return;
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.setAttribute('data-theme', e.newValue || (prefersDark ? 'dark' : 'light'));
   });
 
   window.addEventListener('scroll', render, { passive: true });
@@ -663,14 +523,6 @@
       rafId = alive ? requestAnimationFrame(loop) : (ctx.clearRect(0,0,canvas.width,canvas.height), null);
     })();
   }
-
-  // Theme toggle
-  document.getElementById('theme-toggle').addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-  });
 </script>
 </body>
 </html>

@@ -3,17 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ideas | Navneet Dagdiya Portfolio</title>
-<meta name="description" content="Ideas by Navneet Dagdiya (Nav): small Swift and web experiments from a student developer portfolio.">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://adeveloperduck.github.io/ideas.html">
-<meta property="og:title" content="Ideas | Navneet Dagdiya Portfolio">
-<meta property="og:description" content="Small app ideas and experiments by Navneet Dagdiya (Nav).">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://adeveloperduck.github.io/ideas.html">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ideas | Navneet Dagdiya Portfolio">
-<meta name="twitter:description" content="Small app ideas and experiments by Navneet Dagdiya (Nav).">
+<title>ideas - nav</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;1,14..32,400&display=swap" rel="stylesheet">
 <style>
@@ -22,16 +12,8 @@
   :root {
     --bg: #ffffff;
     --dark: #111111;
-    --grey: #6b7280;
+    --grey: #c0c0c0;
   }
-
-  [data-theme="dark"] {
-    --bg: #111111;
-    --dark: #f0f0f0;
-    --grey: #9ca3af;
-  }
-
-  html { background: var(--bg); transition: background 0.3s ease; }
 
   body {
     background: var(--bg);
@@ -45,7 +27,6 @@
     align-items: center;
     justify-content: center;
     padding: 2rem;
-    transition: background 0.3s ease, opacity 0.4s ease;
   }
   @media (max-width: 768px) {
     body { padding: 1.5rem; }
@@ -63,19 +44,9 @@
   h1 {
     font-size: clamp(2rem, 4vw, 3rem);
     color: var(--dark);
-    margin-bottom: 1.5rem;
+    margin-bottom: 3rem;
     font-weight: 400;
     letter-spacing: -0.025em;
-  }
-
-  .description {
-    font-size: clamp(1rem, 2vw, 1.25rem);
-    color: var(--grey);
-    margin-bottom: 3rem;
-    line-height: 1.6;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
   }
 
   .ideas-list {
@@ -112,71 +83,24 @@
   .back-button:hover {
     color: var(--dark);
   }
-
-  /* Theme toggle */
-  .theme-toggle {
-    position: fixed;
-    top: 2rem;
-    right: 2rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    z-index: 100;
-    color: var(--grey);
-    transition: color 0.3s ease;
-    padding: 0.5rem;
-  }
-  .theme-toggle:hover { color: var(--dark); }
-  .theme-toggle svg {
-    width: 20px;
-    height: 20px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    display: block;
-  }
-  .theme-toggle .sun-icon { display: none; }
-  [data-theme="dark"] .theme-toggle .sun-icon { display: block; }
-  [data-theme="dark"] .theme-toggle .moon-icon { display: none; }
-
-  body.page-exit {
-    opacity: 0 !important;
-  }
 </style>
-<script>
-  (function() {
-    var saved = localStorage.getItem('theme');
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var theme = saved || (prefersDark ? 'dark' : 'light');
-    document.documentElement.setAttribute('data-theme', theme);
-  })();
-</script>
 </head>
 <body>
-
-<button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
-  <svg class="moon-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-  <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-</button>
 
 <div class="container">
   <h1>ideas</h1>
   
-  <p class="description">ideas are a series of <span style="color: var(--dark);">unpolished, little apps</span> that don't deserve to be turned into <span style="color: var(--dark);">real projects</span> but still deserve a place somewhere.</p>
-  
   <div class="ideas-list">
     <a href="https://adeveloperduck.github.io/idea-1/" class="idea-link" target="_blank" rel="noopener noreferrer">
-      idea 1 - click counter
+      idea 1
     </a>
     
     <a href="https://adeveloperduck.github.io/idea-2/" class="idea-link" target="_blank" rel="noopener noreferrer">
-      idea 2 - tasknote
+      idea 2
     </a>
     
     <a href="https://adeveloperduck.github.io/idea-3/" class="idea-link" target="_blank" rel="noopener noreferrer">
-      idea 3 - quote of the day
+      idea 3
     </a>
   </div>
 
@@ -184,38 +108,6 @@
     back to home
   </a>
 </div>
-
-<script>
-  window.addEventListener('pageshow', () => {
-    var saved = localStorage.getItem('theme');
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.setAttribute('data-theme', saved || (prefersDark ? 'dark' : 'light'));
-  });
-
-  window.addEventListener('storage', (e) => {
-    if (e.key !== 'theme') return;
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.setAttribute('data-theme', e.newValue || (prefersDark ? 'dark' : 'light'));
-  });
-
-  document.getElementById('theme-toggle').addEventListener('click', () => {
-    const current = document.documentElement.getAttribute('data-theme');
-    const next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-  });
-
-  document.querySelectorAll('a[href]').forEach(link => {
-    const href = link.getAttribute('href');
-    if (href && !href.startsWith('http') && !href.startsWith('mailto:') && link.target !== '_blank') {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        document.body.classList.add('page-exit');
-        setTimeout(() => { window.location.href = href; }, 400);
-      });
-    }
-  });
-</script>
 
 </body>
 </html>

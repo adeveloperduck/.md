@@ -1,10 +1,5 @@
-title: Navneet Dagdiya Portfolio
-description: Portfolio of Navneet Dagdiya (Nav), student developer from Perth building Swift and SwiftUI projects.
-url: https://adeveloperduck.github.io
-
 plugins:
   - jekyll-redirect-from
-  - jekyll-sitemap
 
 include:
   - .well-known
