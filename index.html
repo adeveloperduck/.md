@@ -242,105 +242,13 @@
     }
   }
 
-  /* ── Loader ── */
-  .loader-overlay {
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    z-index: 99999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .loader-overlay.reveal {
-    animation: loader-reveal 1.6s cubic-bezier(0.4, 0, 0.0, 1) forwards;
-  }
-  @keyframes loader-reveal {
-    0%   { clip-path: inset(0 0 0 0); }
-    100% { clip-path: inset(0 0 100% 0); }
-  }
 
-  .odometer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
-    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), filter 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .odometer.fade-out {
-    opacity: 0;
-    transform: scale(0.9);
-    filter: blur(6px);
-  }
-
-  .digit-slot {
-    height: 1.1em;
-    overflow: hidden;
-    position: relative;
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(5rem, 15vw, 12rem);
-    font-weight: 400;
-    letter-spacing: -0.04em;
-    color: var(--dark);
-    font-variant-numeric: tabular-nums;
-    line-height: 1.1;
-  }
-  .digit-slot::before,
-  .digit-slot::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 40%;
-    z-index: 2;
-    pointer-events: none;
-  }
-  .digit-slot::before {
-    top: 0;
-    background: linear-gradient(to bottom, var(--bg), transparent);
-  }
-  .digit-slot::after {
-    bottom: 0;
-    background: linear-gradient(to top, var(--bg), transparent);
-  }
-
-  .digit-strip {
-    display: flex;
-    flex-direction: column;
-    will-change: transform;
-  }
-  .digit-strip span {
-    display: block;
-    text-align: center;
-    height: 1.1em;
-    line-height: 1.1;
-  }
-  body.loading {
-    overflow: hidden;
-  }
   .page-content {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .page-content.visible {
     opacity: 1;
-    transform: translateY(0);
   }
 </style>
 </head>
 <body>
-
-<div class="loader-overlay" id="loader">
-  <div class="odometer" id="odometer">
-    <div class="digit-slot" id="digit-tens">
-      <div class="digit-strip" id="strip-tens"></div>
-    </div>
-    <div class="digit-slot" id="digit-ones">
-      <div class="digit-strip" id="strip-ones"></div>
-    </div>
-  </div>
-</div>
 
 <canvas id="confetti-canvas"></canvas>
 
@@ -384,114 +292,6 @@
 </div>
 
 <script>
-  // ── Loader ──
-  document.body.classList.add('loading');
-  const loaderEl      = document.getElementById('loader');
-  const odometer      = document.getElementById('odometer');
-  const stripTens     = document.getElementById('strip-tens');
-  const stripOnes     = document.getElementById('strip-ones');
-  const pageContent   = document.getElementById('page-content');
-
-  // Build strips: ones cycles 0-9 ten times (positions 0-99), tens goes 0-9
-  (function buildStrips() {
-    for (let i = 0; i < 100; i++) {
-      const s = document.createElement('span');
-      s.textContent = i % 10;
-      stripOnes.appendChild(s);
-    }
-    for (let d = 0; d <= 9; d++) {
-      const s = document.createElement('span');
-      s.textContent = d;
-      stripTens.appendChild(s);
-    }
-  })();
-
-  function setStrip(strip, pos) {
-    strip.style.transform = `translateY(-${pos * 1.1}em)`;
-  }
-
-  // Smooth interpolation state
-  let onesTarget = 0, tensTarget = 0;
-  let onesCurrent = 0, tensCurrent = 0;
-  const LERP = 0.12;
-
-  function animateDigits() {
-    onesCurrent += (onesTarget - onesCurrent) * LERP;
-    tensCurrent += (tensTarget - tensCurrent) * LERP;
-
-    // Snap when very close to avoid infinite micro-moves
-    if (Math.abs(onesTarget - onesCurrent) < 0.01) onesCurrent = onesTarget;
-    if (Math.abs(tensTarget - tensCurrent) < 0.01) tensCurrent = tensTarget;
-
-    setStrip(stripOnes, onesCurrent);
-    setStrip(stripTens, tensCurrent);
-
-    if (onesCurrent !== onesTarget || tensCurrent !== tensTarget) {
-      requestAnimationFrame(animateDigits);
-    }
-  }
-
-  let digitAnimating = false;
-  function updateDigits(val) {
-    onesTarget = val;
-    tensTarget = Math.floor(val / 10);
-    if (!digitAnimating) {
-      digitAnimating = true;
-      requestAnimationFrame(function loop() {
-        onesCurrent += (onesTarget - onesCurrent) * LERP;
-        tensCurrent += (tensTarget - tensCurrent) * LERP;
-        if (Math.abs(onesTarget - onesCurrent) < 0.01) onesCurrent = onesTarget;
-        if (Math.abs(tensTarget - tensCurrent) < 0.01) tensCurrent = tensTarget;
-        setStrip(stripOnes, onesCurrent);
-        setStrip(stripTens, tensCurrent);
-        if (onesCurrent !== onesTarget || tensCurrent !== tensTarget) {
-          requestAnimationFrame(loop);
-        } else {
-          digitAnimating = false;
-        }
-      });
-    }
-  }
-
-  function runLoader() {
-    const duration = 2400;
-    const start = performance.now();
-    let displayed = -1;
-
-    function tick(now) {
-      const elapsed = now - start;
-      let p = Math.min(elapsed / duration, 1);
-      p = 1 - Math.pow(1 - p, 3);
-      const val = Math.min(Math.round(p * 99), 99);
-
-      if (val !== displayed) {
-        displayed = val;
-        updateDigits(val);
-      }
-
-      if (p < 1) {
-        requestAnimationFrame(tick);
-      } else {
-        // Step 1: fade out the odometer
-        setTimeout(() => {
-          odometer.classList.add('fade-out');
-        }, 400);
-
-        // Step 2: reveal overlay + show content
-        setTimeout(() => {
-          loaderEl.classList.add('reveal');
-          document.body.classList.remove('loading');
-          pageContent.classList.add('visible');
-          loaderEl.addEventListener('animationend', () => {
-            loaderEl.remove();
-          }, { once: true });
-        }, 1100);
-      }
-    }
-    requestAnimationFrame(tick);
-  }
-
-  document.fonts.ready.then(() => runLoader());
 
   const words = [
     { text: 'hello',           color: 'dark', },
@@ -584,15 +384,29 @@
   track.style.height = (PX_PER_WORD * N + END_SCROLL + window.innerHeight) + 'px';
 
   let allRevealed = false;
+  let prevScrollY = 0;
+  let autoScrollTriggered = false;
 
   function render() {
     const scrollY   = window.scrollY;
+    const isScrollingForward = scrollY > prevScrollY;
+    prevScrollY = scrollY;
     const maxScroll = track.scrollHeight - window.innerHeight;
     hint.classList.toggle('hidden', scrollY > 10);
 
     const ramp = Math.min(1, scrollY / (PX_PER_WORD * 3));
     const holdRadius = PX_PER_WORD * (0.5 + ramp * 2.0);
     const fadeRadius = PX_PER_WORD * (1.4 + ramp * 2.1);
+
+    // Auto-scroll when reaching first letter of "website" while scrolling forward
+    const websiteWordStart = (N - 1) * PX_PER_WORD;
+    if (isScrollingForward && scrollY >= websiteWordStart && !autoScrollTriggered) {
+      autoScrollTriggered = true;
+      window.scrollBy({ top: 200, behavior: 'smooth' });
+    }
+    if (!isScrollingForward) {
+      autoScrollTriggered = false;
+    }
 
     // Check if last word ("website") is fully visible (within holdRadius)
     const lastWordPeak = (N - 1) * PX_PER_WORD + PX_PER_WORD / 2;
