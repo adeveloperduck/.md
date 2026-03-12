@@ -102,6 +102,9 @@
     100% { transform: rotate(0deg); }
   }
 
+  .word-nowrap {
+    white-space: nowrap;
+  }
   .mexican-wave {
     display: inline-block;
     animation: mexican-wave 2s ease-in-out infinite;
@@ -183,6 +186,35 @@
   .social-links a:hover {
     color: var(--dark);
   }
+  .ideas-link {
+    position: fixed;
+    bottom: 7rem;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 1s ease 0.3s;
+    pointer-events: none;
+    z-index: 11;
+  }
+  @media (max-width: 768px) {
+    .ideas-link { bottom: 5.5rem; }
+  }
+  .ideas-link.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .ideas-link a {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.4rem, 3vw, 3rem);
+    letter-spacing: -0.025em;
+    color: var(--grey);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  .ideas-link a:hover {
+    color: var(--dark);
+  }
+
   .social-links svg {
     width: 22px;
     height: 22px;
@@ -216,6 +248,10 @@
     <rect x="1" y="1" width="12" height="20" rx="6"/>
     <line x1="7" y1="5" x2="7" y2="9"/>
   </svg>
+</div>
+
+<div class="ideas-link" id="ideas-link">
+  <a href="ideas.html">ideas</a>
 </div>
 
 <div class="social-links" id="social-links">
@@ -261,10 +297,6 @@
     { text: 'swift',           color: 'dark' },
     { text: '&',               color: 'grey' },
     { text: 'swiftui.',        color: 'dark' },
-    { text: 'check',           color: 'grey' },
-    { text: 'out',             color: 'grey' },
-    { text: 'my',              color: 'grey' },
-    { text: 'ideas.',           color: 'dark', link: 'ideas.html' },
     { text: 'Welcome',         color: 'dark', mexicanWave: true },
     { text: 'to',              color: 'grey' },
     { text: 'my',              color: 'grey' },
@@ -299,6 +331,7 @@
       link.textContent = w.text;
       span.appendChild(link);
     } else if (w.mexicanWave) {
+      span.classList.add('word-nowrap');
       // Split word into individual letters for Mexican wave effect
       w.text.split('').forEach((letter, letterIndex) => {
         const letterSpan = document.createElement('span');
@@ -347,6 +380,7 @@
         els.forEach(el => el.classList.add('revealed'));
         launchConfetti();
         setTimeout(() => {
+          document.getElementById('ideas-link').classList.add('show');
           document.getElementById('social-links').classList.add('show');
           document.getElementById('hint').style.opacity = '0';
         }, 2000);
@@ -357,6 +391,8 @@
     if (allRevealed) {
       allRevealed = false;
       els.forEach(el => el.classList.remove('revealed'));
+      document.getElementById('ideas-link').classList.remove('show');
+      document.getElementById('social-links').classList.remove('show');
     }
 
     els.forEach((el, i) => {
