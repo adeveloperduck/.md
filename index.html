@@ -253,34 +253,75 @@
     justify-content: center;
   }
   .loader-overlay.reveal {
-    animation: loader-reveal 1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    animation: loader-reveal 1.6s cubic-bezier(0.4, 0, 0.0, 1) forwards;
   }
   @keyframes loader-reveal {
     0%   { clip-path: inset(0 0 0 0); }
     100% { clip-path: inset(0 0 100% 0); }
   }
-  .loader-counter {
+
+  .odometer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), filter 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .odometer.fade-out {
+    opacity: 0;
+    transform: scale(0.9);
+    filter: blur(6px);
+  }
+
+  .digit-slot {
+    height: 1.1em;
+    overflow: hidden;
+    position: relative;
     font-family: 'Inter', sans-serif;
-    font-size: clamp(3rem, 8vw, 7rem);
+    font-size: clamp(5rem, 15vw, 12rem);
     font-weight: 400;
     letter-spacing: -0.04em;
     color: var(--dark);
     font-variant-numeric: tabular-nums;
-    user-select: none;
-    transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
+    line-height: 1.1;
   }
-  .loader-counter.fade-out {
-    opacity: 0;
-    transform: scale(0.85);
-    filter: blur(8px);
+  .digit-slot::before,
+  .digit-slot::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 40%;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .digit-slot::before {
+    top: 0;
+    background: linear-gradient(to bottom, var(--bg), transparent);
+  }
+  .digit-slot::after {
+    bottom: 0;
+    background: linear-gradient(to top, var(--bg), transparent);
+  }
+
+  .digit-strip {
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+  }
+  .digit-strip span {
+    display: block;
+    text-align: center;
+    height: 1.1em;
+    line-height: 1.1;
   }
   body.loading {
     overflow: hidden;
   }
   .page-content {
     opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateY(20px);
+    transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .page-content.visible {
     opacity: 1;
@@ -291,7 +332,14 @@
 <body>
 
 <div class="loader-overlay" id="loader">
-  <div class="loader-counter" id="loader-number">0</div>
+  <div class="odometer" id="odometer">
+    <div class="digit-slot" id="digit-tens">
+      <div class="digit-strip" id="strip-tens"></div>
+    </div>
+    <div class="digit-slot" id="digit-ones">
+      <div class="digit-strip" id="strip-ones"></div>
+    </div>
+  </div>
 </div>
 
 <canvas id="confetti-canvas"></canvas>
@@ -301,6 +349,7 @@
   <div class="stage">
     <div class="words-container" id="container"></div>
   </div>
+</div>
 </div>
 
 <div class="hint" id="hint">
@@ -333,14 +382,76 @@
     </svg>
   </a>
 </div>
-</div>
 
 <script>
   // ── Loader ──
   document.body.classList.add('loading');
-  const loaderEl   = document.getElementById('loader');
-  const loaderNum  = document.getElementById('loader-number');
-  const pageContent = document.getElementById('page-content');
+  const loaderEl      = document.getElementById('loader');
+  const odometer      = document.getElementById('odometer');
+  const stripTens     = document.getElementById('strip-tens');
+  const stripOnes     = document.getElementById('strip-ones');
+  const pageContent   = document.getElementById('page-content');
+
+  // Build strips: ones cycles 0-9 ten times (positions 0-99), tens goes 0-9
+  (function buildStrips() {
+    for (let i = 0; i < 100; i++) {
+      const s = document.createElement('span');
+      s.textContent = i % 10;
+      stripOnes.appendChild(s);
+    }
+    for (let d = 0; d <= 9; d++) {
+      const s = document.createElement('span');
+      s.textContent = d;
+      stripTens.appendChild(s);
+    }
+  })();
+
+  function setStrip(strip, pos) {
+    strip.style.transform = `translateY(-${pos * 1.1}em)`;
+  }
+
+  // Smooth interpolation state
+  let onesTarget = 0, tensTarget = 0;
+  let onesCurrent = 0, tensCurrent = 0;
+  const LERP = 0.12;
+
+  function animateDigits() {
+    onesCurrent += (onesTarget - onesCurrent) * LERP;
+    tensCurrent += (tensTarget - tensCurrent) * LERP;
+
+    // Snap when very close to avoid infinite micro-moves
+    if (Math.abs(onesTarget - onesCurrent) < 0.01) onesCurrent = onesTarget;
+    if (Math.abs(tensTarget - tensCurrent) < 0.01) tensCurrent = tensTarget;
+
+    setStrip(stripOnes, onesCurrent);
+    setStrip(stripTens, tensCurrent);
+
+    if (onesCurrent !== onesTarget || tensCurrent !== tensTarget) {
+      requestAnimationFrame(animateDigits);
+    }
+  }
+
+  let digitAnimating = false;
+  function updateDigits(val) {
+    onesTarget = val;
+    tensTarget = Math.floor(val / 10);
+    if (!digitAnimating) {
+      digitAnimating = true;
+      requestAnimationFrame(function loop() {
+        onesCurrent += (onesTarget - onesCurrent) * LERP;
+        tensCurrent += (tensTarget - tensCurrent) * LERP;
+        if (Math.abs(onesTarget - onesCurrent) < 0.01) onesCurrent = onesTarget;
+        if (Math.abs(tensTarget - tensCurrent) < 0.01) tensCurrent = tensTarget;
+        setStrip(stripOnes, onesCurrent);
+        setStrip(stripTens, tensCurrent);
+        if (onesCurrent !== onesTarget || tensCurrent !== tensTarget) {
+          requestAnimationFrame(loop);
+        } else {
+          digitAnimating = false;
+        }
+      });
+    }
+  }
 
   function runLoader() {
     const duration = 2400;
@@ -349,23 +460,22 @@
 
     function tick(now) {
       const elapsed = now - start;
-      // smooth ease-out curve — fast start, gentle finish
       let p = Math.min(elapsed / duration, 1);
       p = 1 - Math.pow(1 - p, 3);
-      const val = Math.min(Math.round(p * 100), 100);
+      const val = Math.min(Math.round(p * 99), 99);
 
       if (val !== displayed) {
         displayed = val;
-        loaderNum.textContent = val;
+        updateDigits(val);
       }
 
       if (p < 1) {
         requestAnimationFrame(tick);
       } else {
-        // Step 1: fade out the counter
+        // Step 1: fade out the odometer
         setTimeout(() => {
-          loaderNum.classList.add('fade-out');
-        }, 250);
+          odometer.classList.add('fade-out');
+        }, 400);
 
         // Step 2: reveal overlay + show content
         setTimeout(() => {
@@ -375,13 +485,12 @@
           loaderEl.addEventListener('animationend', () => {
             loaderEl.remove();
           }, { once: true });
-        }, 650);
+        }, 1100);
       }
     }
     requestAnimationFrame(tick);
   }
 
-  // Wait for font + page ready, then run
   document.fonts.ready.then(() => runLoader());
 
   const words = [
