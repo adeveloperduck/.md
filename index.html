@@ -3,17 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>nav</title>
+<title>Navneet Dagdiya | Nav's Portfolio | Swift Developer</title>
 
 <!-- Open Graph -->
-<meta property="og:title" content="nav">
-<meta property="og:description" content="student developer from perth, western australia.">
+<meta property="og:title" content="Navneet Dagdiya | Nav's Portfolio">
+<meta property="og:description" content="Portfolio of Navneet Dagdiya (Nav), a student developer from Perth, Western Australia building Swift and SwiftUI projects.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://adeveloperduck.github.io">
+<meta property="og:site_name" content="Nav's Portfolio">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="nav">
-<meta name="twitter:description" content="student developer from perth, western australia.">
-<meta name="description" content="student developer from perth, western australia.">
+<meta name="twitter:title" content="Navneet Dagdiya | Nav's Portfolio">
+<meta name="twitter:description" content="Student developer from Perth, Western Australia working with Swift and SwiftUI.">
+<meta name="description" content="Navneet Dagdiya's portfolio. Nav is a student developer from Perth, Western Australia focused on Swift and SwiftUI projects.">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://adeveloperduck.github.io/">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Navneet Dagdiya",
+  "alternateName": ["Nav", "adeveloperduck"],
+  "url": "https://adeveloperduck.github.io/",
+  "jobTitle": "Student Developer",
+  "knowsAbout": ["Swift", "SwiftUI"],
+  "homeLocation": {
+    "@type": "Place",
+    "name": "Perth, Western Australia"
+  },
+  "sameAs": [
+    "https://github.com/adeveloperduck",
+    "https://discord.com/users/1337320225066061911"
+  ]
+}
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;1,14..32,400&display=swap" rel="stylesheet">
@@ -264,6 +287,18 @@
     opacity: 1;
   }
 
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   /* Theme toggle */
   .theme-toggle {
     position: fixed;
@@ -301,6 +336,9 @@
 </script>
 </head>
 <body>
+
+<h1 class="sr-only">Navneet Dagdiya - Nav's Portfolio</h1>
+<p class="sr-only">Student developer from Perth, Western Australia building Swift and SwiftUI projects.</p>
 
 <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
   <svg class="moon-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
