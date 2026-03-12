@@ -406,11 +406,13 @@
       document.getElementById('social-links').classList.remove('show');
     }
 
+    const ramp = Math.min(1, scrollY / (PX_PER_WORD * 3));
+
     els.forEach((el, i) => {
       const peak       = i * PX_PER_WORD + PX_PER_WORD / 2;
       const dist       = Math.abs(scrollY - peak);
-      const holdRadius = PX_PER_WORD * 0.5;
-      const fadeRadius = PX_PER_WORD * 1.4;
+      const holdRadius = PX_PER_WORD * (0.5 + ramp * 2.0);
+      const fadeRadius = PX_PER_WORD * (1.4 + ramp * 2.1);
 
       let a;
       if (dist <= holdRadius) {
