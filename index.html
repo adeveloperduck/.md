@@ -172,7 +172,7 @@
     display: flex;
     gap: 2.5rem;
     opacity: 0;
-    transition: opacity 1s ease 0.5s;
+    transition: none;
     pointer-events: none;
     z-index: 11;
   }
@@ -203,7 +203,7 @@
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
-    transition: opacity 1s ease 0.3s;
+    transition: opacity 1s ease;
     pointer-events: none;
     z-index: 11;
   }
@@ -317,6 +317,7 @@
   const container = document.getElementById('container');
   const track     = document.getElementById('track');
   const hint      = document.getElementById('hint');
+  const myWordIndex = words.findIndex(w => w.text === 'my');
 
   // Build DOM — inject real space text nodes between words so the
   // browser's normal word-spacing / line-breaking works correctly
@@ -376,9 +377,13 @@
   track.style.height = (PX_PER_WORD * N + END_SCROLL + window.innerHeight) + 'px';
 
   let allRevealed = false;
+  let lastScrollY = window.scrollY;
+  let myAutoScrollArmed = true;
+  let myAutoScrollTriggerY = -Infinity;
 
   function render() {
     const scrollY   = window.scrollY;
+    const isScrollingForward = scrollY > lastScrollY;
     const maxScroll = track.scrollHeight - window.innerHeight;
     hint.classList.toggle('hidden', scrollY > 10);
 
@@ -390,11 +395,9 @@
         allRevealed = true;
         els.forEach(el => el.classList.add('revealed'));
         launchConfetti();
-        setTimeout(() => {
-          document.getElementById('ideas-link').classList.add('show');
-          document.getElementById('social-links').classList.add('show');
-          document.getElementById('hint').style.opacity = '0';
-        }, 2000);
+        document.getElementById('ideas-link').classList.add('show');
+        document.getElementById('social-links').classList.add('show');
+        document.getElementById('hint').style.opacity = '0';
       }
       return;
     }
@@ -407,6 +410,7 @@
     }
 
     const ramp = Math.min(1, scrollY / (PX_PER_WORD * 3));
+    let myIsUnblurred = false;
 
     els.forEach((el, i) => {
       const peak       = i * PX_PER_WORD + PX_PER_WORD / 2;
@@ -426,7 +430,23 @@
 
       el.style.opacity = 0.12 + a * 0.88;
       el.style.filter  = `blur(${((1 - a) * 8).toFixed(2)}px)`;
+
+      if (i === myWordIndex && a >= 0.999) {
+        myIsUnblurred = true;
+      }
     });
+
+    if (!isScrollingForward && scrollY < myAutoScrollTriggerY - 80) {
+      myAutoScrollArmed = true;
+    }
+
+    if (!restoringScroll && myAutoScrollArmed && isScrollingForward && myIsUnblurred) {
+      myAutoScrollArmed = false;
+      myAutoScrollTriggerY = scrollY;
+      window.scrollBy({ top: 1000, behavior: 'smooth' });
+    }
+
+    lastScrollY = scrollY;
   }
 
   // Scroll preservation: only save when navigating to internal pages,
