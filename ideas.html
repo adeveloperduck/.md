@@ -44,9 +44,21 @@
   h1 {
     font-size: clamp(2rem, 4vw, 3rem);
     color: var(--dark);
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
     font-weight: 400;
     letter-spacing: -0.025em;
+  }
+
+  .ideas-description {
+    font-size: clamp(0.95rem, 2.1vw, 1.25rem);
+    line-height: 1.45;
+    color: var(--grey);
+    margin: 0 auto 2.5rem;
+    max-width: 40rem;
+  }
+
+  .ideas-description .dark {
+    color: var(--dark);
   }
 
   .ideas-list {
@@ -89,18 +101,21 @@
 
 <div class="container">
   <h1>ideas</h1>
+  <p class="ideas-description">
+    <span class="dark">Ideas</span> are <span class="dark">unpolished</span> <span class="dark">projects</span> that <span class="dark">don't deserve</span> to be actual <span class="dark">apps</span> but still deserve a <span class="dark">spot</span> <span class="dark">somewhere</span>.
+  </p>
   
   <div class="ideas-list">
     <a href="https://adeveloperduck.github.io/idea-1/" class="idea-link" target="_blank" rel="noopener noreferrer">
-      idea 1
+      idea 1 - a simple click tracker
     </a>
     
     <a href="https://adeveloperduck.github.io/idea-2/" class="idea-link" target="_blank" rel="noopener noreferrer">
-      idea 2
+      idea 2 - a task + notes app
     </a>
     
     <a href="https://adeveloperduck.github.io/idea-3/" class="idea-link" target="_blank" rel="noopener noreferrer">
-      idea 3
+      idea 3 - a random quote generator
     </a>
   </div>
 
