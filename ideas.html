@@ -118,7 +118,7 @@
   </div>
 
   <div style="margin-bottom:2rem;">
-    <a id="show-all-toggle" class="back-button" style="cursor:pointer;">Show all</a>
+    <a id="show-all-toggle" class="back-button" style="cursor:pointer;">show all</a>
   </div>
 
   <a href="index.html" class="back-button">
@@ -165,7 +165,7 @@ showAllToggle.addEventListener('click', () => {
     ideasList.innerHTML = allIdeas.slice(0, 3).map(idea =>
       `<a href="${idea.href}" class="idea-link" target="_blank" rel="noopener noreferrer">${idea.text}</a>`
     ).join('');
-    showAllToggle.textContent = 'Show all';
+    showAllToggle.textContent = 'show all';
     showingAll = false;
   }
 });
