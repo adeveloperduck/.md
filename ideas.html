@@ -115,10 +115,12 @@
     <a href="https://adeveloperduck.github.io/idea-3/" class="idea-link" target="_blank" rel="noopener noreferrer">
       idea 3 - a random quote generator
     </a>
-  </div>
-
-  <div style="margin-bottom:2rem;">
-    <a id="show-all-toggle" class="back-button" style="cursor:pointer;">show all</a>
+    <a href="https://adeveloperduck.github.io/idea-2/" class="idea-link" target="_blank" rel="noopener noreferrer">
+      idea 2 - a task + notes app
+    </a>
+    <a href="https://adeveloperduck.github.io/idea-1/" class="idea-link" target="_blank" rel="noopener noreferrer">
+      idea 1 - a simple click tracker
+    </a>
   </div>
 
   <a href="index.html" class="back-button">
@@ -127,48 +129,7 @@
 </div>
 
 <script>
-const allIdeas = [
-  {
-    href: "https://adeveloperduck.github.io/idea-5/",
-    text: "idea 5 - arithemify - a math problem generator"
-  },
-  {
-    href: "https://adeveloperduck.github.io/idea-4-taskly/",
-    text: "idea 4 - task app"
-  },
-  {
-    href: "https://adeveloperduck.github.io/idea-3/",
-    text: "idea 3 - a random quote generator"
-  },
-  {
-    href: "https://adeveloperduck.github.io/idea-2/",
-    text: "idea 2 - a task + notes app"
-  },
-  {
-    href: "https://adeveloperduck.github.io/idea-1/",
-    text: "idea 1 - a simple click tracker"
-  }
-];
-
-const ideasList = document.getElementById('ideas-list');
-const showAllToggle = document.getElementById('show-all-toggle');
-let showingAll = false;
-
-showAllToggle.addEventListener('click', () => {
-  if (!showingAll) {
-    ideasList.innerHTML = allIdeas.map(idea =>
-      `<a href="${idea.href}" class="idea-link" target="_blank" rel="noopener noreferrer">${idea.text}</a>`
-    ).join('');
-    showAllToggle.textContent = 'Show latest 3';
-    showingAll = true;
-  } else {
-    ideasList.innerHTML = allIdeas.slice(0, 3).map(idea =>
-      `<a href="${idea.href}" class="idea-link" target="_blank" rel="noopener noreferrer">${idea.text}</a>`
-    ).join('');
-    showAllToggle.textContent = 'show all';
-    showingAll = false;
-  }
-});
+// Remove show all toggle logic, always show all ideas
 </script>
 
 </body>
